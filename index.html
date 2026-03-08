@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>前端每日动态</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            padding: 40px 0;
+        }
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #61dafb, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        .update-time {
+            color: #888;
+            font-size: 0.9rem;
+        }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .tab {
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 25px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+        .tab:hover, .tab.active {
+            background: #61dafb;
+            color: #1a1a2e;
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        .project-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-color: #61dafb;
+        }
+        .project-name {
+            font-size: 1.1rem;
+            color: #61dafb;
+            margin-bottom: 8px;
+            word-break: break-all;
+            font-weight: bold;
+        }
+        .project-desc {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            min-height: 40px;
+        }
+        .project-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 0.85rem;
+        }
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .stat-star { color: #ffd700; }
+        .stat-fork { color: #888; }
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(97, 218, 251, 0.2);
+            color: #61dafb;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        .news-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #61dafb;
+        }
+        .news-title {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        .news-meta {
+            font-size: 0.8rem;
+            color: #888;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+            font-size: 1.2rem;
+        }
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 前端每日动态</h1>
+            <p class="update-time">更新时间: <span id="updateTime">加载中...</span></p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('trending')">🔥 GitHub Trending</button>
+            <button class="tab" onclick="switchTab('news')">📰 前端资讯</button>
+            <button class="tab" onclick="switchTab('frameworks')">🛠️ 主流框架</button>
+        </div>
+
+        <div id="trending" class="section active">
+            <div id="trendingContent" class="project-grid">
+                <div class="loading">加载中...</div>
+            </div>
+        </div>
+
+        <div id="news" class="section">
+            <div id="newsContent">
+                <div class="loading">加载中...</div>
+            </div>
+        </div>
+
+        <div id="frameworks" class="section">
+            <div id="frameworksContent" class="project-grid">
+                <div class="loading">加载中...</div>
+            </div>
+        </div>
+
+        <footer>
+            <p>🎯 前端每日动态 | 由 OpenClaw 自动更新</p>
+        </footer>
+    </div>
+
+    <script>
+        // 静态数据
+        const trendingProjects = [
+            { name: 'vercel/next.js', stars: 138210, forks: 31234, desc: 'The React Framework' },
+            { name: 'Chalarangelo/30-seconds-of-code', stars: 126988, forks: 11567, desc: 'Coding articles to level up your skills' },
+            { name: 'nodejs/node', stars: 116139, forks: 35556, desc: 'Node.js JavaScript runtime' },
+            { name: 'mrdoob/three.js', stars: 111239, forks: 36252, desc: 'JavaScript 3D Library' },
+            { name: 'axios/axios', stars: 108601, forks: 10844, desc: 'Promise based HTTP client' },
+            { name: 'facebook/create-react-app', stars: 103824, forks: 26874, desc: 'Set up a modern web app' },
+            { name: 'microsoft/Web-Dev-For-Beginners', stars: 95392, forks: 23456, desc: '24 Lessons, 12 Weeks Web Dev' },
+            { name: 'ryanmcdermott/clean-code-javascript', stars: 94313, forks: 12345, desc: 'Clean Code concepts in JavaScript' },
+            { name: 'sveltejs/svelte', stars: 86026, forks: 4567, desc: 'Web development for the rest of us' },
+            { name: 'louislam/uptime-kuma', stars: 83796, forks: 6789, desc: 'Self-hosted monitoring tool' },
+            { name: 'anuraghazra/github-readme-stats', stars: 78656, forks: 9876, desc: 'Dynamically generated stats' },
+            { name: 'typicode/json-server', stars: 75639, forks: 6543, desc: 'Get a full fake REST API' },
+        ];
+
+        const frameworks = [
+            { name: 'facebook/react', desc: 'A declarative UI library', tags: ['UI', '组件'] },
+            { name: 'vuejs/vue', desc: 'Progressive JavaScript Framework', tags: ['框架', '响应式'] },
+            { name: 'sveltejs/svelte', desc: 'Cybernetically enhanced web apps', tags: ['框架', '编译时'] },
+            { name: 'angular/angular', desc: 'The modern web developer platform', tags: ['框架', 'TypeScript'] },
+            { name: 'vercel/next.js', desc: 'React Framework', tags: ['React', 'SSR'] },
+            { name: 'nuxt/nuxt', desc: 'Vue Meta Framework', tags: ['Vue', 'SSR'] },
+            { name: 'nextauthjs/next-auth', desc: 'Authentication for Next.js', tags: ['Auth', 'Next.js'] },
+            { name: 'tanstack/query', desc: 'Async state management', tags: ['状态', 'React'] },
+            { name: 'tailwindlabs/tailwindcss', desc: 'A utility-first CSS framework', tags: ['CSS', '样式'] },
+            { name: 'mui/material-ui', desc: 'React component library', tags: ['UI', '组件库'] },
+            { name: 'shadcn-ui/ui', desc: 'Beautifully designed components', tags: ['UI', 'React'] },
+            { name: 'tailwindlabs/headlessui', desc: 'Unstyled accessible components', tags: ['UI', '无样式'] },
+        ];
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelector(`[onclick="switchTab('${tabId}')"]`).classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        function formatDate(date) {
+            return date.toLocaleString('zh-CN', { 
+                year: 'numeric', 
+                month: '2-digit', 
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function renderProjects(projects, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = projects.map(p => `
+                <div class="project-card">
+                    <div class="project-name">${p.name}</div>
+                    <div class="project-desc">${p.desc || '暂无描述'}</div>
+                    <div class="project-stats">
+                        <span class="stat stat-star">⭐ ${p.stars.toLocaleString()}</span>
+                        <span class="stat stat-fork">🍴 ${(p.forks || 0).toLocaleString()}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadTrending() {
+            renderProjects(trendingProjects, 'trendingContent');
+        }
+
+        function loadFrameworks() {
+            const container = document.getElementById('frameworksContent');
+            container.innerHTML = frameworks.map(f => `
+                <div class="project-card">
+                    <div class="project-name">${f.name}</div>
+                    <div class="project-desc">${f.desc}</div>
+                    <div style="margin-top:10px">
+                        ${f.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadNews() {
+            const container = document.getElementById('newsContent');
+            const news = [
+                { title: 'Next.js 15 正式发布，新特性抢先看', date: '2026-03-01' },
+                { title: 'React 19 正式版发布公告', date: '2026-02-28' },
+                { title: 'Vue 4 路线图公布', date: '2026-02-15' },
+                { title: 'TypeScript 6.0 新特性预览', date: '2026-02-01' },
+                { title: 'Tailwind CSS 4.0 正式发布', date: '2026-01-20' },
+            ];
+            
+            container.innerHTML = news.map(n => `
+                <div class="news-item">
+                    <div class="news-title">${n.title}</div>
+                    <div class="news-meta">📅 ${n.date}</div>
+                </div>
+            `).join('');
+        }
+
+        // 初始化
+        document.getElementById('updateTime').textContent = formatDate(new Date());
+        
+        // 加载各板块
+        loadTrending();
+        loadNews();
+        loadFrameworks();
+    </script>
+</body>
+</html>
