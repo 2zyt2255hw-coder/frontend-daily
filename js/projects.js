@@ -1,3 +1,19 @@
+// 前端项目列表数据
+const trendingProjects = [
+    { name: 'vercel/next.js', stars: 138210, forks: 31234, desc: 'The React Framework' },
+    { name: 'Chalarangelo/30-seconds-of-code', stars: 126988, forks: 11567, desc: 'Coding articles to level up your skills' },
+    { name: 'nodejs/node', stars: 116139, forks: 35556, desc: 'Node.js JavaScript runtime' },
+    { name: 'mrdoob/three.js', stars: 111239, forks: 36252, desc: 'JavaScript 3D Library' },
+    { name: 'axios/axios', stars: 108601, forks: 10844, desc: 'Promise based HTTP client' },
+    { name: 'facebook/create-react-app', stars: 103824, forks: 26874, desc: 'Set up a modern web app' },
+    { name: 'microsoft/Web-Dev-For-Beginners', stars: 95392, forks: 23456, desc: '24 Lessons, 12 Weeks Web Dev' },
+    { name: 'ryanmcdermott/clean-code-javascript', stars: 94313, forks: 12345, desc: 'Clean Code concepts in JavaScript' },
+    { name: 'sveltejs/svelte', stars: 86026, forks: 4567, desc: 'Web development for the rest of us' },
+    { name: 'louislam/uptime-kuma', stars: 83796, forks: 6789, desc: 'Self-hosted monitoring tool' },
+    { name: 'anuraghazra/github-readme-stats', stars: 78656, forks: 9876, desc: 'Dynamically generated stats' },
+    { name: 'typicode/json-server', stars: 75639, forks: 6543, desc: 'Get a full fake REST API' },
+];
+
 // 前端项目中文详情数据
 const projectDetails = {
     'vercel/next.js': {
@@ -11,7 +27,7 @@ const projectDetails = {
     
     'nodejs/node': {
         title: 'Node.js - JavaScript 运行时',
-        description: 'Node.js 是基于 Chrome V8 引擎的 JavaScript 运行时，让 JavaScript 可以、服务端开发。',
+        description: 'Node.js 是基于 Chrome V8 引擎的 JavaScript 运行时，让 JavaScript 可以，服务端开发。',
         tags: '<span class="tag">Node.js</span><span class="tag">后端</span><span class="tag">JavaScript</span>',
         install: '```bash\n# 使用 nvm 安装（推荐）\ncurl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash\nnvm install 20\nnvm use 20\n\n# 验证安装\nnode -v\n```',
         usage: '```javascript\n// 创建 HTTP 服务器\nconst http = require(\'http\');\n\nconst server = http.createServer((req, res) => {\n  res.statusCode = 200;\n  res.setHeader(\'Content-Type\', \'text/plain\');\n  res.end(\'Hello Node.js!\\n\');\n});\n\nserver.listen(3000, () => {\n  console.log(\'Server running at http://localhost:3000/\');\n});\n```',
@@ -50,7 +66,7 @@ const projectDetails = {
         description: 'Vue.js 是一套用于构建用户界面的渐进式框架，特点是易上手、灵活、高效。',
         tags: '<span class="tag">Vue</span><span class="tag">框架</span><span class="tag">响应式</span>',
         install: '```bash\n# 使用 Vite 创建\nnpm create vue@latest my-vue-app\n\n# 或使用 Vue CLI\nnpm install -g @vue/cli\nvue create my-vue-app\n\n# CDN 引入\n# <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>\n```',
-        usage: '```html\n<script setup>\nimport { ref, onMounted } from \'vue\'\n\nconst count = ref(0)\n\nfunction increment() {\n  count.value++\n}\n\nonMounted(() => {\n  console.log(\'组件挂载完成\')\n})\n</script>\n\n<template>\n  <button @click="increment\">计数: {{ count }}</button>\n</template>\n```',
+        usage: '```html\n<script setup>\nimport { ref, onMounted } from \'vue\'\n\nconst count = ref(0)\n\nfunction increment() {\n  count.value++\n}\n\nonMounted(() => {\n  console.log(\'组件挂载完成\')\n})\n</script>\n\n<template>\n  <button @click="increment">计数: {{ count }}</button>\n</template>\n```',
         resources: '• 官方文档：https://vuejs.org/\n• 中文文档：https://cn.vuejs.org/'
     },
     
